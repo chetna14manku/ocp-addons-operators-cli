@@ -39,6 +39,7 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli --help
 * `--brew-token`: Brew token (needed to install managed-odh addon in stage). Default value is taken from environment variable `BREW_TOKEN`.
 * `--debug`: Enable debug logs
 * `--parallel`: Run install/uninstall in parallel
+* `--must-gather-output-dir`: Path to must-gather output dir. `must-gather` will try to collect data when addon/operator installation fails and cluster can be accessed.
 
 * Operators configuration
   * `--kubeconfig`: Path to kubeconfig; can be overwritten by cluster-specific configuration

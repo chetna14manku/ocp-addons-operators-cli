@@ -9,6 +9,7 @@ kubeconfig: !ENV "${KUBECONFIG}"
 endpoint: "https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token"
 ocm-token: !ENV "${OCM_TOKEN}"
 cluster-name: cluster1
+must-gather-dir
 
 addons:
 - name: ocm-addon-test-operator

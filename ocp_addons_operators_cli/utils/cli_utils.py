@@ -1,6 +1,10 @@
+import os
+import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from pathlib import Path
 
 import click
+from ocp_utilities.must_gather import run_must_gather
 from simple_logger.logger import get_logger
 
 from ocp_addons_operators_cli.constants import SUPPORTED_ACTIONS
@@ -59,12 +63,13 @@ def verify_user_input(**kwargs):
     assert_addons_user_input(addons=addons, brew_token=brew_token)
 
 
-def run_install_or_uninstall_products(operators, addons, parallel, debug, install):
+def run_install_or_uninstall_products(
+    operators, addons, parallel, debug, install, must_gather_output_dir
+):
     if debug:
         set_debug_os_flags()
 
     futures = []
-    processed_results = []
     action = "install" if install else "uninstall"
 
     with ThreadPoolExecutor() as executor:
@@ -82,20 +87,37 @@ def run_install_or_uninstall_products(operators, addons, parallel, debug, instal
         for product_action_tuple in addons_action_list + operators_action_list:
             action_func = product_action_tuple[0]
             action_kwargs = product_action_tuple[1]
+            product_dict = product_action_tuple[2]
             if parallel:
                 futures.append(executor.submit(action_func, **action_kwargs))
             else:
-                processed_results.append(action_func(**action_kwargs))
+                try:
+                    action_func(**action_kwargs)
+                except Exception as ex:
+                    LOGGER.error(
+                        f"Failed to {action}: \n{ex}",
+                    )
+                    collect_must_gather(
+                        must_gather_output_dir=must_gather_output_dir,
+                        product=product_dict,
+                    )
+                    raise click.Abort()
 
-    if futures:
-        for result in as_completed(futures):
-            if result.exception():
-                # TODO: Add cluster name, product name and type to threads
-                LOGGER.error(
-                    f"Failed to {action}: {result.exception()}\n",
-                )
-                raise click.Abort()
-            processed_results.append(result.result())
+            LOGGER.info(f"FUTURES:: {futures}")
+            if futures:
+                LOGGER.info(f"PRODUCT_DICT: {product_dict}")
+                for result in as_completed(futures):
+                    LOGGER.info(f"RESULT: {result}")
+                    if result.exception():
+                        # TODO: Add cluster name, product name and type to threads
+                        LOGGER.error(
+                            f"Failed to {action}: {result.exception()}\n",
+                        )
+                        collect_must_gather(
+                            must_gather_output_dir=must_gather_output_dir,
+                            product=product_dict,
+                        )
+                        raise click.Abort()
 
     addon_names = [addon["name"] for addon in addons]
     operator_names = [operator["name"] for operator in operators]
@@ -103,7 +125,6 @@ def run_install_or_uninstall_products(operators, addons, parallel, debug, instal
         f"Successfully {action} {f'addons: {addon_names}' if addons else ''} "
         f"{f'operators: {operator_names}' if operators else ''}"
     )
-    return processed_results
 
 
 def set_parallel(user_input_parallel, operators, addons):
@@ -112,3 +133,37 @@ def set_parallel(user_input_parallel, operators, addons):
         return user_input_parallel
 
     return False
+
+
+def collect_must_gather(must_gather_output_dir, product):
+    cluster_name = product["cluster_name"]
+    kubeconfig_path = product["kubeconfig"]
+
+    target_dir = os.path.join(
+        must_gather_output_dir, "must-gather", cluster_name
+    )
+
+    try:
+        if not os.path.exists(kubeconfig_path):
+            LOGGER.error("Kubeconfig does not exist; cannot run must-gather.")
+            return
+
+        LOGGER.info(f"Prepare must-gather target extracted directory {target_dir}.")
+        Path(target_dir).mkdir(parents=True, exist_ok=True)
+
+        click.echo(
+            f"Collect must-gather for cluster {cluster_name}"
+        )
+        run_must_gather(
+            target_base_dir=target_dir,
+            kubeconfig=kubeconfig_path,
+        )
+        LOGGER.success("must-gather collected")
+
+    except Exception as ex:
+        LOGGER.error(
+            f"Failed to run must-gather \n{ex}",
+        )
+
+        LOGGER.info(f"Delete must-gather target directory {target_dir}.")
+        shutil.rmtree(target_dir)

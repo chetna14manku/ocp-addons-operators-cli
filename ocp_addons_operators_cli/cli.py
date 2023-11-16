@@ -113,6 +113,15 @@ Optional parameters:
     is_flag=True,
     show_default=True,
 )
+@click.option(
+    "--must-gather-output-dir",
+    help="""
+\b
+Path to must-gather output directory.
+must-gather will try to collect data when addon/operator installation fails and cluster can be accessed.
+""",
+    type=click.Path(exists=True),
+)
 @click.option("--debug", help="Enable debug logs", is_flag=True)
 def main(**kwargs):
     LOGGER.info(f"Click Version: {click.__version__}")
@@ -141,6 +150,7 @@ def main(**kwargs):
     user_kwargs["addons"] = addons
     install = action == INSTALL_STR
     user_kwargs["install"] = install
+    must_gather_output_dir = user_kwargs.get("must_gather_output_dir")
 
     verify_user_input(**user_kwargs)
 
@@ -161,6 +171,7 @@ def main(**kwargs):
         parallel=parallel,
         debug=debug,
         install=install,
+        must_gather_output_dir=must_gather_output_dir,
     )
 
 

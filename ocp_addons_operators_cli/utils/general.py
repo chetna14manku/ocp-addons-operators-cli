@@ -3,6 +3,9 @@ import os
 import re
 
 import requests
+from simple_logger.logger import get_logger
+
+LOGGER = get_logger(name=__name__)
 
 
 def set_debug_os_flags():

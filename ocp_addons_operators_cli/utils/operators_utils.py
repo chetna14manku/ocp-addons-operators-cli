@@ -137,6 +137,11 @@ def prepare_operators_action(operators, install):
             "timeout": operator["timeout"],
             "operator_namespace": operator.get("namespace"),
         }
+        operator_dict = {
+            "name": name,
+            "cluster_name": operator["cluster-name"],
+            "kubeconfig": operator["kubeconfig"],
+        }
 
         if install:
             brew_token = operator.get("brew-token")
@@ -147,6 +152,6 @@ def prepare_operators_action(operators, install):
             action_kwargs["iib_index_image"] = operator.get("iib")
             action_kwargs["target_namespaces"] = operator.get("target-namespaces")
 
-        operators_action_list.append((operator_func, action_kwargs))
+        operators_action_list.append((operator_func, action_kwargs, operator_dict))
 
     return operators_action_list
