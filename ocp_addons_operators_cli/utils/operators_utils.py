@@ -125,6 +125,7 @@ def prepare_operators_action(operators, install):
             action_kwargs["channel"] = operator["channel"]
             action_kwargs["source"] = operator["source"]
             action_kwargs["iib_index_image"] = operator.get("iib")
+            action_kwargs["source_image"] = operator.get("source-image")
             action_kwargs["target_namespaces"] = operator.get("target-namespaces")
 
         operators_action_list.append((operator_func, action_kwargs))

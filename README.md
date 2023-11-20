@@ -62,6 +62,7 @@ Each `--addon` or `operator` accept args, the format is `arg=value;`
 * `iib=/path/to/iib:123456`: Install the operator using the provided IIB
 * `channel=stable`: Operator channel to install from, default: 'stable'
 * `source=redhat-operators`: Operator source, default: 'redhat-operators'
+* `source-image=registry/redhat/operator-index:v4.13`: Install Operator using provided CatalogSource Image
 * `kubeconfig`: Path to kubeconfig; if not provided, global configuration will be used
 
 
@@ -171,7 +172,7 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli \
     -o 'name=servicemeshoperator;kubeconfig=/tmp/kubeconfig2'
 ```
 
-##### Install operator using IIB (ndex-image)
+##### Install operator using IIB (index-image)
 
 ```
 podman run quay.io/redhat_msi/ocp-addons-operators-cli \
@@ -179,6 +180,15 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli \
     --kubeconfig ~/work/CSPI/kubeconfig/rosa-myk412 \
     --brew-token token \
     -o 'name=rhods-operator;namespace=redhat-ods-operator;iib=/path/to/iib:123456'
+```
+
+##### Install operator using CatalogSource Image
+
+```
+podman run quay.io/redhat_msi/ocp-addons-operators-cli \
+    --action install \
+    --kubeconfig ~/work/CSPI/kubeconfig/rosa-myk412 \
+    -o 'name=rhods-operator;namespace=redhat-ods-operator;source-image=registry/redhat/operator-index:v4.13'
 ```
 
 #### Uninstall Operator

@@ -25,5 +25,6 @@ operators:
     channel: latest
     source: redhat-operators
     iib: </path/to/iib:123456>
+    source-image: <registry/redhat/operator-index:v4.13>
     kubeconfig: !ENV "${HOME}/kubeconfig1"  # optional, overwrites global `kubeconfig`
     timeout: 30m
