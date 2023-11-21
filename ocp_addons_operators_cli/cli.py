@@ -46,6 +46,7 @@ Optional parameters:
     channel - Operator channel to install from, default: 'stable'
     source - Operator source, default: 'redhat-operators'
     target-namespaces - A list of target namespaces for the operator
+    source-image - To install operator from specific CatalogSource Image
     iib - To install an operator using custom iib
     """,
     multiple=True,
