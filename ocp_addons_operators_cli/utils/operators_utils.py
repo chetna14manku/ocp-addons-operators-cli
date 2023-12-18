@@ -82,7 +82,7 @@ def get_cluster_name_from_kubeconfig(kubeconfig, operator_name):
     return kubeconfig_clusters[0]["name"]
 
 
-def prepare_operators(operators, brew_token, install):
+def prepare_operators(operators, brew_token, install, must_gather_output_dir):
     LOGGER.info("Preparing operators dict")
     for operator in operators:
         kubeconfig = operator["kubeconfig"]
@@ -92,6 +92,7 @@ def prepare_operators(operators, brew_token, install):
             operator_name=operator["name"],
         )
         operator["timeout"] = tts(ts=operator.get("timeout", TIMEOUT_60MIN))
+        operator["must_gather_output_dir"] = must_gather_output_dir
 
         if install:
             operator["channel"] = operator.get("channel", "stable")
@@ -127,6 +128,11 @@ def prepare_operators_action(operators, install):
             action_kwargs["iib_index_image"] = operator.get("iib")
             action_kwargs["source_image"] = operator.get("source-image")
             action_kwargs["target_namespaces"] = operator.get("target-namespaces")
+            must_gather_output_dir = operator.get("must_gather_output_dir")
+            if must_gather_output_dir:
+                action_kwargs["must_gather_output_dir"] = must_gather_output_dir
+                action_kwargs["kubeconfig"] = operator["kubeconfig"]
+                action_kwargs["cluster_name"] = operator["cluster-name"]
 
         operators_action_list.append((operator_func, action_kwargs))
 

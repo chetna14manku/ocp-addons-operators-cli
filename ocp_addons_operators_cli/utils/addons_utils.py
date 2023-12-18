@@ -1,4 +1,7 @@
+import os
+
 import click
+import yaml
 from ocm_python_client.exceptions import NotFoundException
 from ocm_python_wrapper.cluster import Cluster, ClusterAddOn
 from ocm_python_wrapper.ocm_client import OCMPythonClient
@@ -104,7 +107,15 @@ def assert_addons_user_input(addons, brew_token):
         assert_missing_managed_odh_brew_token(addons=addons, brew_token=brew_token)
 
 
-def prepare_addons(addons, ocm_token, endpoint, brew_token, install):
+def store_kubeconfig_from_cluster_name(cluster_name, kubeconfig_dict):
+    kubeconfig_path = os.path.join("/tmp", f"kubeconfig-{cluster_name}")
+    with open(kubeconfig_path, "w") as fd:
+        fd.write(yaml.dump(kubeconfig_dict))  # noqa: FCN001
+
+    return kubeconfig_path
+
+
+def prepare_addons(addons, ocm_token, endpoint, brew_token, install, must_gather_output_dir):
     LOGGER.info("Preparing addons dict")
     missing_clusters_addons = []
     for addon in addons:
@@ -115,6 +126,7 @@ def prepare_addons(addons, ocm_token, endpoint, brew_token, install):
         addon["ocm-env"] = ocm_env
         addon["brew-token"] = brew_token
         addon["rosa"] = bool(addon.get("rosa"))
+        addon["must_gather_output_dir"] = must_gather_output_dir
 
         ocm_client = OCMPythonClient(
             token=ocm_token,
@@ -130,6 +142,9 @@ def prepare_addons(addons, ocm_token, endpoint, brew_token, install):
 
         if cluster.exists:
             addon["cluster-object"] = cluster
+            addon["kubeconfig"] = store_kubeconfig_from_cluster_name(
+                cluster_name=cluster.name, kubeconfig_dict=cluster.kubeconfig
+            )
         else:
             missing_clusters_addons.append(addon_name)
 
@@ -168,6 +183,10 @@ def prepare_addons_action(addons, install):
             brew_token = addon.get("brew-token")
             if brew_token:
                 action_kwargs["brew_token"] = brew_token
+            must_gather_output_dir = addon.get("must_gather_output_dir")
+            if must_gather_output_dir:
+                action_kwargs["must_gather_output_dir"] = must_gather_output_dir
+                action_kwargs["kubeconfig"] = addon["kubeconfig"]
 
         addons_action_list.append((addon_func, action_kwargs))
 
