@@ -128,8 +128,7 @@ def prepare_operators_action(operators, install):
             action_kwargs["iib_index_image"] = operator.get("iib")
             action_kwargs["source_image"] = operator.get("source-image")
             action_kwargs["target_namespaces"] = operator.get("target-namespaces")
-            must_gather_output_dir = operator.get("must_gather_output_dir")
-            if must_gather_output_dir:
+            if must_gather_output_dir := operator.get("must_gather_output_dir"):
                 action_kwargs["must_gather_output_dir"] = must_gather_output_dir
                 action_kwargs["kubeconfig"] = operator["kubeconfig"]
                 action_kwargs["cluster_name"] = operator["cluster-name"]
