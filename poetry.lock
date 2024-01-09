@@ -764,12 +764,12 @@ rosa-python-client = ">=1.0.28,<2.0.0"
 
 [[package]]
 name = "openshift-python-utilities"
-version = "5.0.12"
+version = "5.0.13"
 description = "A utilities repository for https://github.com/RedHatQE/openshift-python-wrapper"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "openshift_python_utilities-5.0.12.tar.gz", hash = "sha256:34cf5e17d09c2b9dc9b07622736fd19202990d5d7e82f8cab0672b70de0e70a3"},
+    {file = "openshift_python_utilities-5.0.13.tar.gz", hash = "sha256:ab47e7c1a767d5a363fb5d6da22701abe9cecaf52f8a7866b91f06a62ef88426"},
 ]
 
 [package.dependencies]
@@ -783,12 +783,12 @@ timeout-sampler = ">=0.0.1,<0.0.2"
 
 [[package]]
 name = "openshift-python-wrapper"
-version = "4.15.13"
+version = "4.15.14"
 description = "Wrapper around https://github.com/kubernetes-client/python"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "openshift_python_wrapper-4.15.13.tar.gz", hash = "sha256:f5da0c5a8843057df47ba5b29f69c2ff5b83229ac579ef69bd29d7ea85dd0802"},
+    {file = "openshift_python_wrapper-4.15.14.tar.gz", hash = "sha256:4c5e25cc64ae05e48afbea327d4ff8150fe4e07952df314821fb0fa01d017cf4"},
 ]
 
 [package.dependencies]
@@ -1442,4 +1442,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "b681eed413060ba99dec9acc83c33b6ea6dec94195e049aa3c0b4aa28722d49b"
+content-hash = "29fec71d901323120bbe532d69e850f1a06147dac4e994901d7edd4eebd0ab08"
