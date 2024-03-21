@@ -9,7 +9,7 @@ exclude = [".git", ".venv", ".mypy_cache", ".tox", "__pycache__"]
 
 [tool.poetry]
 name = "ocp-addons-operators-cli"
-version = "1.0.0"
+version = "0.0.0"
 description = "CLI to install/uninstall Addons/operators on Openshift clusters."
 authors = [
   "Meni Yakove <myakove@gmail.com>",
@@ -37,6 +37,13 @@ python-simple-logger = "^1.0.7"
 ipython = "*"
 ipdb = "*"
 
+[tool.poetry-dynamic-versioning]
+enable = true
+pattern = "((?P<epoch>\\d+)!)?(?P<base>\\d+(\\.\\d+)*)"
+
+[tool.poetry-dynamic-versioning.substitution]
+files = ["VERSION"]
+
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
