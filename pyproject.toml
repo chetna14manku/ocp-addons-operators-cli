@@ -33,7 +33,7 @@ click = "^8.1.4"
 pyaml-env = "^1.2.1"
 python-simple-logger = "^1.0.7"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 ipython = "*"
 ipdb = "*"
 
