@@ -16,6 +16,10 @@ fcn_exclude_functions =
     json,
     logging,
     write,
+    mocker,
+    Version,
+    pytest,
+    usefixtures,
 
 enable-extensions =
     FCN,
