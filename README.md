@@ -1,13 +1,15 @@
 ## ocp-addons-operators-cli
+
 CLI to Install/Uninstall Addons/operators on OCM/OCP clusters.
 
 ### Container
-image locate at [ocp-addons-operators-cli](https://quay.io/repository/redhat_msi/ocp-addons-operators-cli)  
+
+Image locate at [ocp-addons-operators-cli](https://quay.io/repository/redhat_msi/ocp-addons-operators-cli)
 To pull the image: `podman pull quay.io/redhat_msi/ocp-addons-operators-cli`
 
 ### Local run
 
-clone the [repository](https://github.com/RedHatQE/ocp-addons-operators-cli.git)
+Clone the [repository](https://github.com/RedHatQE/ocp-addons-operators-cli.git)
 
 ```
 git clone https://github.com/RedHatQE/ocp-addons-operators-cli.git
@@ -23,7 +25,9 @@ poetry run python ocp_addons_operators_cli/cli.py --help
 ```
 
 ### Usages
+
 #### Install/uninstall addons and/or operators from YAML file
+
 User can install/uninstall addons and/or operators by sending YAML file instead with CLI args
 Example YAML file can be found [here](ocp_addons_operators_cli/manifests/addons-operators.yaml.example)
 pass `--yaml-config-file=.local/addons-operators.yaml` to use YAML file.
@@ -35,21 +39,23 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli --help
 ```
 
 ### Global CLI configuration
+
 * `--action`: install/uninstall product(s)
-* `--brew-token`: Brew token (needed to install managed-odh addon in stage). Default value is taken from environment variable `BREW_TOKEN`.
+* `--brew-token`: Brew token (needed to install managed-odh addon in stage). Also required for operators IIB installation. Default value is taken from environment variable `BREW_TOKEN`.
 * `--debug`: Enable debug logs
 * `--parallel`: Run install/uninstall in parallel
 * `--must-gather-output-dir`: Path to must-gather output dir. `must-gather` will try to collect data when addon/operator installation fails and cluster can be accessed.
 
 * Operators configuration
   * `--kubeconfig`: Path to kubeconfig; can be overwritten by cluster-specific configuration
-  To install operators from saved IIB json, created by [ci-jobs-trigger](https://github.com/RedHatQE/ci-jobs-trigger):
-  * `--local-operators-latest-iib-path`: Path to local file containing IIB and jobs data
-  * `--s3-bucket-operators-latest-iib-path`: Path to S3 object containing IIB and jobs data
-  * `--aws-access-key-id`: AWS access key id
-  * `--aws-secret-access-key`: AWS secret access key
-  * `--aws-region`: AWS region
-  - `PARENT_JOB_NAME` and `OCP_VERSION` environment variables should be set
+  * To install operators from saved IIB json, created by [ci-jobs-trigger](https://github.com/RedHatQE/ci-jobs-trigger), following args are required:
+    * `--local-operators-latest-iib-path`: Path to local file containing IIB and jobs data
+    * `--s3-bucket-operators-latest-iib-path`: Path to S3 object containing IIB and jobs data
+    * `--aws-access-key-id`: AWS access key id
+    * `--aws-secret-access-key`: AWS secret access key
+    * `--aws-region`: AWS region
+    * `PARENT_JOB_NAME` and `OCP_VERSION` environment variables should be set
+
 * Addons configuration
   * `--endpoint`: SSO endpoint url, defaults to https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
   * `--ocm-token`: OCM token, defaults to `OCM_TOKEN` environment variable
@@ -57,24 +63,28 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli --help
 
 ### Addon/Operator user args
 
-Each `--addon` or `operator` accept args, the format is `arg=value;`
+Each `--addon` or `--operator` accept args, the format is `arg=value;`
+
 ###### Common args:
+
 * `name=name`: Name of the operator/addon to install/uninstall
 * `timeout=300`: timeout to wait for the operator/addon to be installed/uninstalled; format examples: `1h`, `30m`, `3600s`
 
 ###### Addon args:
+
 * `rosa=true`: Use rosa cli to install/uninstall the addon
 * `cluster-name=cluster`: Addon's cluster name; if not provided, global configuration will be used
 
 ###### Operator args:
+
 * `iib=/path/to/iib:123456`: Install the operator using the provided IIB
 * `channel=stable`: Operator channel to install from, default: 'stable'
 * `source=redhat-operators`: Operator source, default: 'redhat-operators'
 * `source-image=registry/redhat/operator-index:v4.13`: Install Operator using provided CatalogSource Image
 * `kubeconfig`: Path to kubeconfig; if not provided, global configuration will be used
 
-
 #### Install Addon
+
 ##### One addon
 
 ```
@@ -99,6 +109,7 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli \
 ```
 
 #### Uninstall Addon
+
 ##### One addon
 
 ```
@@ -135,6 +146,7 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli \
 ```
 
 #### ROSA cli
+
 Pass 'rosa=true' in the addon `-a` arg.
 
 ```
@@ -147,7 +159,9 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli \
 Only addons `ocm-addon-test-operator-1` and `ocm-addon-test-operator-3` will be installed with ROSA cli.
 
 ### Operators
+
 #### Install Operator
+
 ##### One operator
 
 ```
@@ -200,6 +214,7 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli \
 ```
 
 #### Uninstall Operator
+
 ##### One operator
 
 ```
