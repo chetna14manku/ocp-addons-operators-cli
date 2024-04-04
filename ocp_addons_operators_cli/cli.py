@@ -85,7 +85,7 @@ Optional parameters:
     "--brew-token",
     help="""
     \b
-    Brew token (needed to install managed-odh addon in stage).
+    Brew token (needed to install managed-odh addon in stage and for operators IIB installation).
     Default value is taken from environment variable `BREW_TOKEN`, else will be taken from --brew-token flag.
     """,
     default=os.environ.get("BREW_TOKEN"),
