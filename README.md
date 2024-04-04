@@ -51,9 +51,9 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli --help
   * To install operators from saved IIB json, created by [ci-jobs-trigger](https://github.com/RedHatQE/ci-jobs-trigger), following args are required:
     * `--local-operators-latest-iib-path`: Path to local file containing IIB and jobs data
     * `--s3-bucket-operators-latest-iib-path`: Path to S3 object containing IIB and jobs data
-    * `--aws-access-key-id`: AWS access key id
-    * `--aws-secret-access-key`: AWS secret access key
-    * `--aws-region`: AWS region
+    * `--aws-access-key-id`: AWS access key id, needed when using --s3-bucket-operators-latest-iib-path.
+    * `--aws-secret-access-key`: AWS secret access key, needed when using --s3-bucket-operators-latest-iib-path.
+    * `--aws-region`: AWS region, needed when using --s3-bucket-operators-latest-iib-path.
     * `PARENT_JOB_NAME` and `OCP_VERSION` environment variables should be set
 
 * Addons configuration
