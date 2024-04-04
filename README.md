@@ -54,7 +54,7 @@ podman run quay.io/redhat_msi/ocp-addons-operators-cli --help
     * `--aws-access-key-id`: AWS access key id, needed when using --s3-bucket-operators-latest-iib-path.
     * `--aws-secret-access-key`: AWS secret access key, needed when using --s3-bucket-operators-latest-iib-path.
     * `--aws-region`: AWS region, needed when using --s3-bucket-operators-latest-iib-path.
-    * `PARENT_JOB_NAME` and `OCP_VERSION` environment variables should be set
+    * `PARENT_JOB_NAME`  environment variable should be set
 
 * Addons configuration
   * `--endpoint`: SSO endpoint url, defaults to https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
